@@ -46,6 +46,15 @@ if (process.env.NODE_ENV === 'development') {
 app.use('/api', AuthRoutes);
 app.use('/api', UserRoutes);
 
+// Serve static assets in production
+if (process.env.NODE_ENV === "production") {
+  //set the static folder
+  app.use(express.static('client/build'));
+  // now create a route, * means anything but the above routes, so that's the reason
+  // we put this route below the api routes
+  // if app hits the homepage- / , load the index.html
+  app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html')) );
+}
 
 const port = process.env.PORT || 8000;
 app.listen(port, () => {
